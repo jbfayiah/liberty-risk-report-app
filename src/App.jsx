@@ -68,7 +68,7 @@ function LibertyRiskForm() {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "gpt-4",
+          model: "gpt-3.5-turbo",
           messages: [
             { role: "system", content: "You are a safety consultant writing insurance risk control reports." },
             { role: "user", content: prompt },
