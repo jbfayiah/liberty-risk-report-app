@@ -55,10 +55,13 @@ function LibertyRiskForm() {
 
   const generateReport = async () => {
     const combinedText = Object.entries(form)
-      .map(([key, value]) => `${key.replace(/([A-Z])/g, ' $1')}:\\n${value}\\n`)
-      .join("\\n");
+      .map(([key, value]) => `${key.replace(/([A-Z])/g, " $1")}: \n${value}\n`)
+      .join("\n");
 
-    const prompt = `You are a risk control consultant writing to a commercial insurance underwriter. Use the data and notes below to generate a professional Liberty Mutual-style risk assessment summary. The tone should be objective, technical yet friendly, and written in paragraph form. Avoid fluff and jargon.\\n\\n${combinedText}`;
+    const prompt = `You are a risk control consultant writing to a commercial insurance underwriter. Use the data and notes below to generate a professional Liberty Mutual-style risk assessment summary. The tone should be objective, technical yet friendly, and written in paragraph form. Avoid fluff and jargon.\n\n${combinedText}`;
+
+    console.log("📤 Prompt being sent to OpenAI:\n", prompt);
+    console.log("🔐 API Key starts with:", apiKey.slice(0, 8));
 
     try {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -68,19 +71,32 @@ function LibertyRiskForm() {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: "gpt-3.5-turbo", // switched for broader access
           messages: [
-            { role: "system", content: "You are a safety consultant writing insurance risk control reports." },
-            { role: "user", content: prompt },
+            {
+              role: "system",
+              content: "You are a safety consultant writing insurance risk control reports."
+            },
+            {
+              role: "user",
+              content: prompt
+            }
           ],
-          temperature: 0.4,
+          temperature: 0.4
         }),
       });
 
       const data = await response.json();
-      setGeneratedReport(data.choices[0].message.content);
+      console.log("✅ OpenAI response data:", data);
+
+      if (data.choices?.[0]?.message?.content) {
+        setGeneratedReport(data.choices[0].message.content);
+      } else {
+        throw new Error("No response content. Full response: " + JSON.stringify(data));
+      }
     } catch (err) {
-      alert("Something went wrong. Check your API key and try again.");
+      console.error("❌ Error with OpenAI request:", err);
+      alert("Something went wrong. See browser console (F12 → Console tab) for details.");
     }
   };
 
@@ -130,6 +146,7 @@ function LibertyRiskForm() {
           type="password"
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
+          placeholder="sk-..."
           style={{ width: "100%", padding: "10px", fontSize: "14px" }}
         />
       </div>
