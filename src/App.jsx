@@ -2,122 +2,176 @@ import React, { useState } from "react";
 
 function LibertyRiskForm() {
   const [form, setForm] = useState({
-    companyName: "",
-    website: "",
-    meetingDate: "",
-    attendees: "",
+    companyWebsite: "",
+    meetingAttendees: "",
     policyNumber: "",
     surveyNumber: "",
-    uwContact: "",
+    underwritingContact: "",
     accountContact: "",
     agentContact: "",
-    uwConcerns: "",
-    operations: "",
-    safetyProgram: "",
+    descriptionOfOps: "",
+    employeeCount: "",
+    openPositions: "",
+    preHirePractices: "",
+    onboardingPractices: "",
+    safetyExpectations: "",
+    postInjuryManagement: "",
+    safetyManagement: "",
+    formalProgram: "",
+    leadingIndicators: "",
+    affiliations: "",
+    keyHazards: "",
+    ppeRequirements: "",
+    workplaceViolence: "",
+    emergencyPlans: "",
     generalLiability: "",
-    autoLiability: "",
-    wcLossAnalysis: "",
-    glLossAnalysis: "",
-    autoLossAnalysis: "",
-    wcAccidents: "",
-    glAccidents: "",
-    autoAccidents: "",
-    wcRating: "",
-    wcJustification: "",
-    glRating: "",
-    glJustification: "",
-    autoRating: "",
-    autoJustification: "",
-    fleetManagement: "",
-    oshaCompliance: "",
-    claimsOverview: "",
-    dotNumber: "",
-    followUps: ""
+    fleetVehicleDetails: "",
+    leasedRental: "",
+    driverCount: "",
+    vehicleUsage: "",
+    driverQualification: "",
+    vehicleAssignment: "",
+    telematics: "",
+    thirdPartyTransport: "",
+    vehicleStorage: ""
   });
-
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [apiKey, setApiKey] = useState("");
-  const [generatedReport, setGeneratedReport] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
 
-  const handleFileUpload = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length + uploadedFiles.length > 5) {
-      alert("You can only upload up to 5 documents.");
-      return;
-    }
-    setUploadedFiles([...uploadedFiles, ...files]);
-  };
-
-  const generateReport = async () => {
-    const combinedText = Object.entries(form)
-      .map(([key, value]) => `${key.replace(/([A-Z])/g, ' $1')}:\n${value}\n`)
-      .join("\n");
-
-    const prompt = `You are a risk control consultant writing to a commercial insurance underwriter. Use the data and notes below to generate a professional Liberty Mutual-style risk assessment summary. The tone should be objective, technical yet friendly, and written in paragraph form. Avoid fluff and jargon.\n\n${combinedText}`;
-
-    try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4",
-          messages: [
-            { role: "system", content: "You are a safety consultant writing insurance risk control reports." },
-            { role: "user", content: prompt },
-          ],
-          temperature: 0.4,
-        })
-      });
-
-      const data = await response.json();
-      setGeneratedReport(data.choices[0].message.content);
-    } catch (err) {
-      console.error("Error generating report:", err);
-      alert("Failed to generate report. Check your API key or try again.");
-    }
-  };
-
   return (
-    <div className="form-container" style={{ padding: "30px", maxWidth: "900px", margin: "auto" }}>
-      <h2>Liberty Mutual Risk Control Report Form</h2>
+    <div style={{ padding: "30px", maxWidth: "900px", margin: "auto" }}>
+      <h2>Liberty Mutual Risk Control Form</h2>
 
-      <label>
-        OpenAI API Key (not stored):
-        <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} style={{ width: "100%", marginBottom: 20 }} />
+      <label>Company Website:
+        <input type="text" name="companyWebsite" value={form.companyWebsite} onChange={handleChange} style={{ width: "100%" }} />
       </label>
 
-      {/* All previous input fields remain unchanged... */}
-      {/* [Shortened here for space; they're still in your code above] */}
+      <label>Meeting Attendees (Name & Position Title):
+        <textarea name="meetingAttendees" value={form.meetingAttendees} onChange={handleChange} style={{ width: "100%" }} rows={3} />
+      </label>
 
-      <h3>13. Upload Supporting Documents (up to 5)</h3>
-      <input
-        type="file"
-        accept=".pdf,.doc,.docx,.txt,.csv"
-        multiple
-        onChange={handleFileUpload}
-      />
-      <ul>
-        {uploadedFiles.map((file, index) => (
-          <li key={index}>{file.name}</li>
-        ))}
-      </ul>
+      <label>Policy #:
+        <input type="text" name="policyNumber" value={form.policyNumber} onChange={handleChange} style={{ width: "100%" }} />
+      </label>
 
-      <button onClick={generateReport} style={{ marginTop: 20 }}>🧠 Generate Risk Report with AI</button>
+      <label>Survey #:
+        <input type="text" name="surveyNumber" value={form.surveyNumber} onChange={handleChange} style={{ width: "100%" }} />
+      </label>
 
-      {generatedReport && (
-        <div style={{ marginTop: 40 }}>
-          <h3>Generated Report:</h3>
-          <pre style={{ background: "#f8f8f8", padding: "15px", whiteSpace: "pre-wrap" }}>{generatedReport}</pre>
-        </div>
-      )}
+      <label>Underwriting Contact:
+        <input type="text" name="underwritingContact" value={form.underwritingContact} onChange={handleChange} style={{ width: "100%" }} />
+      </label>
+
+      <label>Account Contact:
+        <input type="text" name="accountContact" value={form.accountContact} onChange={handleChange} style={{ width: "100%" }} />
+      </label>
+
+      <label>Agent Contact:
+        <input type="text" name="agentContact" value={form.agentContact} onChange={handleChange} style={{ width: "100%" }} />
+      </label>
+
+      <label>Brief Description of Operations:
+        <textarea name="descriptionOfOps" value={form.descriptionOfOps} onChange={handleChange} style={{ width: "100%" }} rows={5} />
+      </label>
+
+      <h3>Employee Management</h3>
+      <label>Employee Count:
+        <input type="text" name="employeeCount" value={form.employeeCount} onChange={handleChange} style={{ width: "100%" }} />
+      </label>
+
+      <label>Current Open Position/Expansion Plans:
+        <textarea name="openPositions" value={form.openPositions} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Pre-hire Practices:
+        <textarea name="preHirePractices" value={form.preHirePractices} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>New Hire Onboarding Practices:
+        <textarea name="onboardingPractices" value={form.onboardingPractices} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Safety Expectations:
+        <textarea name="safetyExpectations" value={form.safetyExpectations} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Post Injury Management:
+        <textarea name="postInjuryManagement" value={form.postInjuryManagement} onChange={handleChange} style={{ width: "100%" }} rows={3} />
+      </label>
+
+      <h3>Safety Management</h3>
+      <label>Formal Program in Place / Org Chart:
+        <textarea name="formalProgram" value={form.formalProgram} onChange={handleChange} style={{ width: "100%" }} rows={3} />
+      </label>
+
+      <label>Leading Indicators:
+        <textarea name="leadingIndicators" value={form.leadingIndicators} onChange={handleChange} style={{ width: "100%" }} rows={3} />
+      </label>
+
+      <label>Affiliations / Memberships / 3rd Party Engagements:
+        <textarea name="affiliations" value={form.affiliations} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Key Hazards:
+        <textarea name="keyHazards" value={form.keyHazards} onChange={handleChange} style={{ width: "100%" }} rows={3} />
+      </label>
+
+      <label>PPE Requirements / Maintenance:
+        <textarea name="ppeRequirements" value={form.ppeRequirements} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Workplace Violence Prevention:
+        <textarea name="workplaceViolence" value={form.workplaceViolence} onChange={handleChange} style={{ width: "100%" }} rows={1} />
+      </label>
+
+      <label>Emergency Response Plans:
+        <textarea name="emergencyPlans" value={form.emergencyPlans} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <h3>General Liability</h3>
+      <label>General Liability Exposure:
+        <textarea name="generalLiability" value={form.generalLiability} onChange={handleChange} style={{ width: "100%" }} rows={3} />
+      </label>
+
+      <h3>Fleet Management</h3>
+      <label>Number & Types of Vehicles:
+        <textarea name="fleetVehicleDetails" value={form.fleetVehicleDetails} onChange={handleChange} style={{ width: "100%" }} rows={3} />
+      </label>
+
+      <label>Leased / Rental:
+        <textarea name="leasedRental" value={form.leasedRental} onChange={handleChange} style={{ width: "100%" }} rows={1} />
+      </label>
+
+      <label>Number of Drivers / CDL / Auto Allowance:
+        <textarea name="driverCount" value={form.driverCount} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Vehicle Usage:
+        <textarea name="vehicleUsage" value={form.vehicleUsage} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Driver Qualification / MVR:
+        <textarea name="driverQualification" value={form.driverQualification} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Vehicle Assignment:
+        <textarea name="vehicleAssignment" value={form.vehicleAssignment} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>Telematics / Monitoring / COI:
+        <textarea name="telematics" value={form.telematics} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
+
+      <label>3rd Party Transportation:
+        <textarea name="thirdPartyTransport" value={form.thirdPartyTransport} onChange={handleChange} style={{ width: "100%" }} rows={1} />
+      </label>
+
+      <label>Vehicle Storage:
+        <textarea name="vehicleStorage" value={form.vehicleStorage} onChange={handleChange} style={{ width: "100%" }} rows={2} />
+      </label>
     </div>
   );
 }
